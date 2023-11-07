@@ -25,18 +25,24 @@ async function initiateSignin(email, password){
 async function initiateSignup(email, password, name, phoneNumber, age){
     const passwd = hasher(password);
     const usersDB = database.collection("users");
-    const userData = {
-        [email]: {
-            password: passwd,
-            username: name,
-            phoneNum: phoneNumber,
-            userAge: age 
-        } 
+    const user = await usersDB.findOne({ [email]: { $exists: true } });
+    if(user){
+        return "User already exists"
     }
-    try {
-        const result = await usersDB.insertOne(userData);
-        return true; // Indicates successful signup
-    } catch (err) {
-        return err; // Indicates an error
+    else{
+        const userData = {
+            [email]: {
+                password: passwd,
+                username: name,
+                phoneNum: phoneNumber,
+                userAge: age 
+            } 
+        }
+        try {
+            const result = await usersDB.insertOne(userData);
+            return true; // Indicates successful signup
+        } catch (err) {
+            return err; // Indicates an error
+        }
     }
 }
