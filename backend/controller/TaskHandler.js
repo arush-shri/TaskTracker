@@ -9,26 +9,30 @@ async function createTask(email, taskName, date, time, type, description){
         "time": time,
         "type": type,
         "description": [description]
-    }
-    const result = await tasksDB.updateOne(filter, {$push: {"tasks" : taskQuery}})
+    };
+    const result = await tasksDB.updateOne(filter, {$push: {"tasks" : taskQuery}});
 
     if(result.modifiedCount === 1){
-        return true
+        CloseConnection();
+        return true;
     }
     else{
-        return result
+        CloseConnection();
+        return result;
     }
 }
 
 async function editTask(email, taskNewName, taskOldName, date, time, type, description){
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskOldName}})
+    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskOldName}});
     const updateResult = await createTask(email, taskNewName, date, time, type, description);
     if(result && updateResult){
-        return true
+        CloseConnection();
+        return true;
     }
     else{
+        CloseConnection();
         return "Unable to update task"
     }
 }
@@ -36,12 +40,14 @@ async function editTask(email, taskNewName, taskOldName, date, time, type, descr
 async function deleteTask(email, taskName){
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName}})
+    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName}});
     if(result){
-        return true
+        CloseConnection();
+        return true;
     }
     else{
-        return "Unable to update task"
+        CloseConnection();
+        return "Unable to update task";
     }
 }
 
