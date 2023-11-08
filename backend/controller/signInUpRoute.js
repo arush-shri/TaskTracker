@@ -21,3 +21,5 @@ signRoute.post("/signup", (req, res) => {
         res.send(result)            //TO CHANGE LATER
     }
 })
+
+module.exports = signRoute
