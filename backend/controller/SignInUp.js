@@ -13,7 +13,7 @@ async function initiateSignin(email, password){
     if(user){
         CloseConnection()
         console.log(passwd)
-        return user.next().data.password  === passwd;
+        return user.data.password  === passwd;
     }
     else{
         CloseConnection()
@@ -43,6 +43,7 @@ async function initiateSignup(email, password, name, phoneNumber, age){
         try {
             const result = await usersDB.insertOne(userData);
             console.log("true")
+            database.collection("tasks").insertOne({"emailId" : email, "tasks" : []})
             return true; // Indicates successful signup
         } catch (err) {
             console.log(err)
