@@ -34,10 +34,15 @@
     border-radius: 9px;
 }
 .inputs{
-    margin-top: 55px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap:25px;
+}
+.inputTaker{
+    border-radius: 8px;
+    border-color: gray;
+    border-width: 1px;
 }
 .input{
     display: flex;
@@ -83,7 +88,7 @@
     color: var(--bs-main-color);
     background-color: var(--secondary-color);
     border-radius: 50px;
-    font-size: 19px;
+    font-size: 25px;
     font-weight: 700px;
     cursor:pointer;
 }
