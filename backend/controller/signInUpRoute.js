@@ -1,6 +1,6 @@
-const expres = require("express");
+const express = require("express");
 const { initiateSignin, initiateSignup } = require("./SignInUp")
-const signRoute = expres.Router();
+const signRoute = express.Router();
 const jwt = require('jsonwebtoken');
 
 signRoute.post("/login", (req, res) => {
@@ -15,14 +15,14 @@ signRoute.post("/login", (req, res) => {
 })
 
 signRoute.post("/signup", (req, res) => {
-    const result = initiateSignup(req.body.email, req.body.password, req.body.name, req.body.phoneNumber, req.body.age)
+    const result = initiateSignup(req.body.email, req.body.password, req.body.name, req.body.phoneNum, req.body.age)
     if(result === true){
         const token = jwt.sign({ userId: req.body.email }, { expiresIn: '4h' });
         res.json({ token });      //TO CHANGE LATER
     }
     else{
-        res.send(result)            //TO CHANGE LATER
+        res.send(result)           //TO CHANGE LATER
     }
 })
 
-module.exports = signRoute
+module.exports = signRoute;

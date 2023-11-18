@@ -11,8 +11,6 @@ import UserProfile from './components/User/UserProfile';
 
 
 
-
-
 function App() {
   return (
     <div className="App">
