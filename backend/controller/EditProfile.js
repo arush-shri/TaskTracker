@@ -39,4 +39,26 @@ async function changePhoneNumber(email, phoneNumber){
     }
 }
 
-module.exports = {changePassword, changePhoneNumber}
+async function getMe(email) {
+    const usersCollection = DBConnection.collection("users");
+    const filter = { "emailId": email };
+
+    try {
+        const user = await usersCollection.findOne(filter);
+
+        if (user) {
+            const userDetails = user.data;
+            CloseConnection();
+            return userDetails;
+        } else {
+            CloseConnection();
+            return "User not found";
+        }
+    } catch (error) {
+        console.error("Error fetching user details:", error);
+        CloseConnection();
+        return "Error fetching user details";
+    }
+}
+
+module.exports = { changePassword, changePhoneNumber, getMe };
