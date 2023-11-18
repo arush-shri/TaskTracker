@@ -1,0 +1,45 @@
+
+.prod-img img {
+    border-radius: 20%;
+    overflow: hidden;
+  }
+
+  /*services*/
+
+.services-section{
+ padding-top: 100px;
+ height: 200px;
+ width: 100%;
+  
+}
+
+hr{
+  width: 30%;
+  margin-left: 35%;
+}
+
+
+.icon-span{
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--secondary-color);
+  color: var(--bs-main-color);
+}
+
+.img-fluid{
+  width:500px;
+}
+
+.card-box:hover{
+  box-shadow: rgba(149, 151, 161,0.2) 0 8px,24px;
+}
+.common-heading{
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 0.01rem;
+  padding-top: 100px;
+}
+
+.commom-title{
+  margin-bottom: 5rem;
+}

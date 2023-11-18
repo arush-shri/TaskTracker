@@ -1,0 +1,59 @@
+/* Navbar.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Urbanist", sans-serif;
+}
+
+:root {
+    --bs-dark-color: #1a1d20;
+    --bs-dar-primary: #00070e;
+    --bs-main-color: #f6fbff;
+    --bs-primary-color: #d0eaf7;
+    --secondary-color: #0080ff;
+    --bs-supporting-color: #fb0193;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+button,
+a {
+    font-size: 1.15rem;
+    letter-spacing: 0.03rem;
+    word-spacing: .1rem;
+}
+
+.navbar-brand {
+    color: var(--bs-dar-primary);
+    
+}
+
+.navbar {
+    background-color: var(--secondary-color);
+    font-size: larger;
+    height: 70px;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.nav-link {
+    color: var(--bs-main-color);
+}
+
+.nav-link:hover {
+    color: var(--bs-dar-primary);
+}
+
+/* Override hover color for Task Tracker */
+.navbar-brand:hover {
+    color: white;
+}

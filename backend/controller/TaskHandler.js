@@ -1,6 +1,6 @@
 const { CloseConnection, database } = require('./DBConnector');
 
-async function createTask(email, taskName, date, time, type, description){
+async function createTask(email, taskName, date, time, type, priority, description){
     const tasksDB = database.collection("tasks");
     const filter = { "emailId": email };
     const taskQuery = {
@@ -8,7 +8,8 @@ async function createTask(email, taskName, date, time, type, description){
         "date": date,
         "time": time,
         "type": type,
-        "description": [description]
+        "priority": priority,
+        "description": [description]                         //PRIORITY BHI ADD KRNA HAI
     };
     const result = await tasksDB.updateOne(filter, {$push: {"tasks" : taskQuery}});
 
@@ -21,12 +22,12 @@ async function createTask(email, taskName, date, time, type, description){
         return result;
     }
 }
-
-async function editTask(email, taskNewName, taskOldName, date, time, type, description){
+                         //PRIORITY BHI ADD KRNA HAI
+async function editTask(email, taskName, date, time, type, priority, description){
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskOldName}});
-    const updateResult = await createTask(email, taskNewName, date, time, type, description);
+    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": date, "time": time}});
+    const updateResult = await createTask(email, taskName, date, time, type, priority, description);
     if(result && updateResult){
         CloseConnection();
         return true;
@@ -37,10 +38,10 @@ async function editTask(email, taskNewName, taskOldName, date, time, type, descr
     }
 }
 
-async function deleteTask(email, taskName){
+async function deleteTask(email, taskName, date, time){
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName}});
+    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": date, "time": time}});
     if(result){
         CloseConnection();
         return true;
