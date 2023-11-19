@@ -30,22 +30,45 @@ const Loginsignup = () => {
       const handleSignup = async () => {
         try {
           const response = await axios.post('http://localhost:4000/signinup/signup', userData);
-          console.log(response);
           if(typeof response.data === 'string' ){
-            console.log("2");
             setErrorMessage('User already exists. Please choose a different email.');
             setTimeout(() => {
                 setErrorMessage(null);
-              }, 1500);
+              }, 1800);
           }
           else {
             localStorage.setItem('token', response);
-            navigate("./components/TodoList");
+            return navigate("/Todo");
           }
         } catch (error) {
           console.log(error);
         }
       };
+
+      const handleLogin = async () => {
+        try {
+            const response = await axios.post('http://localhost:4000/signinup/login', userData);
+            if(typeof response.data === 'string' ){
+                
+              setErrorMessage('User does not exists.');
+              setTimeout(() => {
+                  setErrorMessage(null);
+                }, 1500);
+            }
+            else if(response.data === false){
+                setErrorMessage('Wrong password');
+                setTimeout(() => {
+                  setErrorMessage(null);
+                }, 1800);
+            }
+            else {
+              localStorage.setItem('token', response);
+              return navigate("/Todo");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+      }
 
     return (
         <div>
@@ -97,7 +120,7 @@ const Loginsignup = () => {
                             action === 'Sign up' ? handleSignup() : setAction('Sign up') 
                         }}>Signup</div>
                     <div className={action === "Sign up" ? "submit gray" : "submit"} onClick={() => { 
-                            action === 'Login' ? console.log("login") : setAction('Login') 
+                            action === 'Login' ? handleLogin() : setAction('Login') 
                         }}>Login</div>
                 </div>
             </div>

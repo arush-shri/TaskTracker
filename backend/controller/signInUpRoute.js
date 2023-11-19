@@ -3,10 +3,13 @@ const { initiateSignin, initiateSignup } = require("./SignInUp")
 const signRoute = express.Router();
 const jwt = require('jsonwebtoken');
 
-signRoute.post("/login", (req, res) => {
-    const result = initiateSignin(req.body.email, req.body.password)
+signRoute.post("/login", async (req, res) => {
+    const result = await initiateSignin(req.body.email, req.body.password)
+    
     if(result === true){
-        const token = jwt.sign({ userId: req.body.email }, { expiresIn: '4h' });
+        const { createHash } = require('crypto');
+        const secret = createHash('sha256').update(req.body.email).digest('hex');
+        const token = jwt.sign({ userId: req.body.email }, secret, { expiresIn: '4h' });
         res.json({ token });     //TO CHANGE LATER
     }
     else{
@@ -14,10 +17,12 @@ signRoute.post("/login", (req, res) => {
     }
 })
 
-signRoute.post("/signup", (req, res) => {
-    const result = initiateSignup(req.body.email, req.body.password, req.body.name, req.body.phoneNum, req.body.age)
+signRoute.post("/signup", async (req, res) => {
+    const result = await initiateSignup(req.body.email, req.body.password, req.body.name, req.body.phoneNum, req.body.age)
     if(result === true){
-        const token = jwt.sign({ userId: req.body.email }, { expiresIn: '4h' });
+        const { createHash } = require('crypto');
+        const secret = createHash('sha256').update(req.body.email).digest('hex');
+        const token = jwt.sign({ userId: req.body.email }, secret, { expiresIn: '4h' });
         res.json({ token });      //TO CHANGE LATER
     }
     else{

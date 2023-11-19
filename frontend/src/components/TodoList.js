@@ -4,8 +4,10 @@ import CreateTask from '../modals/CreateTask';
 import Card from './Card';
 import './Todolist.css';
 import EditTaskPopup from '../modals/EditTask';
+import { useNavigate } from "react-router-dom";
 
 const TodoList = () => {
+  const navigate = useNavigate();
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [taskList, setTaskList] = useState([]);
@@ -68,6 +70,11 @@ const TodoList = () => {
       (task) =>
         task.Status === 'Incomplete' && new Date(task.Deadline).toDateString() === today
     );
+
+    const logout = ()=>{
+      localStorage.removeItem('token')
+      return navigate('/Loginsignup')
+    }
 
     if (incompleteTasks.length > 0) {
       return (
