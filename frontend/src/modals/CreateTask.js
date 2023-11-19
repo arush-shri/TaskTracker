@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import DatePicker from 'react-datepicker'; // Assuming you have a date picker library
-
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import { jwtDecode } from 'jwt-decode';
 
-const CreateTaskPopup = ({ modal, toggle, save }) => {
+const CreateTaskPopup = ({ modal, toggle }) => {
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState(new Date());
   const [status, setStatus] = useState('Incomplete');
+  const [email, setMail] = useState('');
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setMail(decodedToken.userId);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,14 +40,16 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
     setDeadline(date);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     let taskObj = {};
-    taskObj['Name'] = taskName;
-    taskObj['Description'] = description;
-    taskObj['Deadline'] = deadline;
-    taskObj['Status'] = status;
-    save(taskObj);
+    taskObj['taskname'] = taskName;
+    taskObj['email'] = email;
+    taskObj['description'] = description;
+    taskObj['deadline'] = deadline;
+    taskObj['status'] = status;
+    await axios.post('http://localhost:4000/task/createTask', taskObj);
+    toggle();
   };
 
   return (

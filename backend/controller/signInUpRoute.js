@@ -10,7 +10,7 @@ signRoute.post("/login", async (req, res) => {
         const { createHash } = require('crypto');
         const secret = createHash('sha256').update(req.body.email).digest('hex');
         const token = jwt.sign({ userId: req.body.email }, secret, { expiresIn: '4h' });
-        res.json({ token });     //TO CHANGE LATER
+        res.json({ token });
     }
     else{
         res.send(result)
@@ -23,10 +23,10 @@ signRoute.post("/signup", async (req, res) => {
         const { createHash } = require('crypto');
         const secret = createHash('sha256').update(req.body.email).digest('hex');
         const token = jwt.sign({ userId: req.body.email }, secret, { expiresIn: '4h' });
-        res.json({ token });      //TO CHANGE LATER
+        res.json({ token });
     }
     else{
-        res.send(result)           //TO CHANGE LATER
+        res.send(result) 
     }
 })
 

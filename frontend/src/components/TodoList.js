@@ -5,6 +5,7 @@ import Card from './Card';
 import './Todolist.css';
 import EditTaskPopup from '../modals/EditTask';
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 // import { useNavigate } from "react-router-dom";
 
 const TodoList = () => {
@@ -15,14 +16,43 @@ const TodoList = () => {
   const [showAllTasks, setShowAllTasks] = useState(false);
   const [showUpcomingTasks, setShowUpcomingTasks] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [email, setMail] = useState('');
   // const navigate = useNavigate();
+
   useEffect(() => {
-    let arr = localStorage.getItem('taskList');
-    if (arr) {
-      let obj = JSON.parse(arr);
-      setTaskList(obj);
+    
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setMail(decodedToken.userId);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
     }
   }, []);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/task/getAllTasks/${email}`);
+        const tasks = response.data.tasks;
+        if (tasks.length > 0) {
+          setTaskList(tasks);
+        } else {
+          console.log('No tasks found for the user');
+        }
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    const fetchDataInterval = setInterval(() => {
+      fetchTasks();
+    }, 1000000);
+    return () => clearInterval(fetchDataInterval);
+  }, [email]);
+
 
   const deleteTask = (index) => {
     let tempList = [...taskList];
@@ -64,24 +94,12 @@ const TodoList = () => {
     setEditModal(false);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId;
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }
-    }
-  }, []);
-
   const greetUser = () => {
     const today = new Date().toDateString();
-    const incompleteTasks = taskList.filter(
-      (task) =>
-        task.Status === 'Incomplete' && new Date(task.Deadline).toDateString() === today
-    );
+    const incompleteTasks = Array.isArray(taskList)? taskList.filter((task) => {
+      const taskDate = new Date(task.date).toDateString();
+      return task.status === 'Incomplete' && taskDate === today;
+    }) : [];
     
     // const logout = ()=>{
     //   localStorage.removeItem('token')

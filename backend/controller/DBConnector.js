@@ -5,13 +5,13 @@ const { MongoClient } = require('mongodb');
 const client = new MongoClient(url);
 const database = client.db("TaskTracker")
 
-client.connect()
+function openConnection(){client.connect()
     .then(()=>{
         console.log('Connected to MongoDB');
     })
     .catch((err) => {
         console.error('Error connecting to MongoDB:', err);
-    });
+    });}
 
 function CloseConnection(){
     client.close()
@@ -19,5 +19,6 @@ function CloseConnection(){
 
 module.exports = {
     CloseConnection,
+    openConnection,
     database
 };

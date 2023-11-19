@@ -2,8 +2,9 @@ const expres = require("express");
 const { createTask, editTask, deleteTask, getTask, getAllTasks } = require("./TaskHandler")
 const taskRoute = expres.Router();
 
-taskRoute.post('/createTask', (req, res)=>{
-    const result = createTask(req.body.email, req.body.taskname, req.body.date ,req.body.time, req.body.type ,req.body.description)
+taskRoute.post('/createTask', async (req, res)=>{
+    console.log(req.body.deadline)
+    const result = await createTask(req.body.email, req.body.taskname, req.body.deadline, req.body.description, req.body.status)
     if(result){
         res.status(200).send("Task created successfully");
     }
@@ -11,8 +12,8 @@ taskRoute.post('/createTask', (req, res)=>{
         res.status(500).send("Failed to create task");
     }
 })                                                      //PRIORITY BHI ADD KRNA HAI
-taskRoute.post('/updateTask', (req, res)=>{
-    const result = editTask(req.body.email, req.body.tasknewname, req.body.taskoldname, req.body.date ,req.body.time, req.body.type ,req.body.description)
+taskRoute.post('/updateTask', async (req, res)=>{
+    const result = await editTask(req.body.email, req.body.taskname, req.body.Olddeadline, req.body.Newdeadline, req.body.description, req.body.status)
     if(result){
         res.status(200).send("Task update successfully");
     }
@@ -47,6 +48,7 @@ taskRoute.get('/getTask', async (req, res) => {
 
 taskRoute.get('/getAllTasks/:email', async (req, res) => {
     const email = req.params.email;
+    console.log(email)
 
     try {
         const tasks = await getAllTasks(email);

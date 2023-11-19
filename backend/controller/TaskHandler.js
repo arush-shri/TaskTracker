@@ -1,15 +1,26 @@
-const { CloseConnection, database } = require('./DBConnector');
+const { CloseConnection, openConnection, database } = require('./DBConnector');
 
-async function createTask(email, taskName, date, time, type, priority, description){
+async function createTask(email, taskName, deadline, description, status){
+    openConnection();
+    const receivedDeadline = new Date(deadline);
+    const year = receivedDeadline.getFullYear();
+    const month = receivedDeadline.getMonth() + 1;
+    const day = receivedDeadline.getDate();
+    const hours = receivedDeadline.getHours();
+    const minutes = receivedDeadline.getMinutes();
+    const seconds = receivedDeadline.getSeconds();
+
+    const date = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+    const time = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
     const tasksDB = database.collection("tasks");
     const filter = { "emailId": email };
     const taskQuery = {
         "taskname": taskName,
         "date": date,
         "time": time,
-        "type": type,
-        "priority": priority,
-        "description": [description]                         //PRIORITY BHI ADD KRNA HAI
+        "description": description,
+        "status": status                       //PRIORITY BHI ADD KRNA HAI
     };
     const result = await tasksDB.updateOne(filter, {$push: {"tasks" : taskQuery}});
 
@@ -18,18 +29,31 @@ async function createTask(email, taskName, date, time, type, priority, descripti
         return true;
     }
     else{
-        CloseConnection();
+         ;
         return result;
     }
 }
-                         //PRIORITY BHI ADD KRNA HAI
-async function editTask(email, taskName, date, time, type, priority, description){
+
+async function editTask(email, taskName, Olddeadline, Newdeadline , description, status){
+    openConnection();
+    const receivedDeadline = new Date(Olddeadline);
+    const year = receivedDeadline.getFullYear();
+    const month = receivedDeadline.getMonth() + 1;
+    const day = receivedDeadline.getDate();
+    const hours = receivedDeadline.getHours();
+    const minutes = receivedDeadline.getMinutes();
+    const seconds = receivedDeadline.getSeconds();
+
+    const olddate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+    const oldtime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": date, "time": time}});
-    const updateResult = await createTask(email, taskName, date, time, type, priority, description);
+    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": olddate, "time": oldtime}});
+    const updateResult = await createTask(email, taskName, Newdeadline, description, status);
     if(result && updateResult){
-        CloseConnection();
+        ;
         return true;
     }
     else{
@@ -38,7 +62,19 @@ async function editTask(email, taskName, date, time, type, priority, description
     }
 }
 
-async function deleteTask(email, taskName, date, time){
+async function deleteTask(email, taskName, deadline){
+    openConnection();
+    const receivedDeadline = new Date(deadline);
+    const year = receivedDeadline.getFullYear();
+    const month = receivedDeadline.getMonth() + 1;
+    const day = receivedDeadline.getDate();
+    const hours = receivedDeadline.getHours();
+    const minutes = receivedDeadline.getMinutes();
+    const seconds = receivedDeadline.getSeconds();
+
+    const date = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+    const time = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
     const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": date, "time": time}});
@@ -53,6 +89,7 @@ async function deleteTask(email, taskName, date, time){
 }
 
 async function getTask(email, taskName) {
+    openConnection();
     const filter = {"emailId": email, "taskname": taskName};
     const tasksDB = database.collection("tasks");
     
@@ -74,15 +111,15 @@ async function getTask(email, taskName) {
 }
 
 async function getAllTasks(email) {
+    openConnection();
     const filter = { "emailId": email };
     const taskDB = database.collection("tasks");
     
     try {
-        const result = await taskDB.find(filter).toArray();
-
-        if (result.length > 0) {
+        const result = await taskDB.findOne(filter)
+        if (result.tasks.length > 0) {
             CloseConnection();
-            return result;
+            return result.tasks;
         } else {
             CloseConnection();
             return "No tasks found for the user";

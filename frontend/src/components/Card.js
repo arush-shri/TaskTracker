@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import EditTaskPopup from '../modals/EditTask';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Card.css';
 
@@ -30,13 +29,13 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
   const handleCheckboxChange = () => {
     const updatedTask = {
       ...taskObj,
-      Status: taskObj.Status === 'Completed' ? 'Incomplete' : 'Completed',
+      Status: taskObj.status === 'Completed' ? 'Incomplete' : 'Completed',
     };
     updateTask(updatedTask);
   };
 
   return (
-    <div className={`card-wrapper mr-5 ${taskObj.Status === 'Completed' ? 'completed' : ''}`}>
+    <div className={`card-wrapper mr-5 ${taskObj.status === 'Completed' ? 'completed' : ''}`}>
       <div className="card-top" style={{ backgroundColor: colors[index % 5].primaryColor }}></div>
       <div className="task-holder">
         <div className="title-wrapper">
@@ -45,23 +44,23 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
             style={{
               backgroundColor: colors[index % 5].secondaryColor,
               borderRadius: "10px",
-              textDecoration: taskObj.Status === 'Completed' ? 'line-through' : 'none',
+              textDecoration: taskObj.status === 'Completed' ? 'line-through' : 'none',
             }}
           >
-            {taskObj.Name}
+            {taskObj.taskname}
           </span>
           
         </div>
-        <p className="mt-3">{taskObj.Description}</p>
+        <p className="mt-3">{taskObj.description}</p>
 
         {/* Updated styling for Deadline and Status */}
         <div className="task-info">
           <strong>Deadline:</strong>
-          <span className="deadline">{taskObj.Deadline}</span>
+          <span className="deadline">{`${taskObj.date} ${taskObj.time}`}</span>
         </div>
         <div className="task-info">
           <strong>Status:</strong>
-          <span className="status">{taskObj.Status}</span>
+          <span className="status">{taskObj.status}</span>
         </div>
 
         <div className="icon-wrapper">
