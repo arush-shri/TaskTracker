@@ -46,7 +46,7 @@ const CreateTaskPopup = ({ modal, toggle }) => {
     taskObj['taskname'] = taskName;
     taskObj['email'] = email;
     taskObj['description'] = description;
-    taskObj['deadline'] = deadline;
+    taskObj['deadline'] = (new Date(new Date(deadline).getTime() + (5 * 60 + 30) * 60 * 1000));
     taskObj['status'] = status;
     await axios.post('http://localhost:4000/task/createTask', taskObj);
     toggle();

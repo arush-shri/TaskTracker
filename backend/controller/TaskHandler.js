@@ -3,12 +3,12 @@ const { CloseConnection, openConnection, database } = require('./DBConnector');
 async function createTask(email, taskName, deadline, description, status){
     openConnection();
     const receivedDeadline = new Date(deadline);
-    const year = receivedDeadline.getFullYear();
-    const month = receivedDeadline.getMonth() + 1;
-    const day = receivedDeadline.getDate();
-    const hours = receivedDeadline.getHours();
-    const minutes = receivedDeadline.getMinutes();
-    const seconds = receivedDeadline.getSeconds();
+    const year = receivedDeadline.getUTCFullYear();
+    const month = receivedDeadline.getUTCMonth() + 1;
+    const day = receivedDeadline.getUTCDate();
+    const hours = receivedDeadline.getUTCHours();
+    const minutes = receivedDeadline.getUTCMinutes();
+    const seconds = receivedDeadline.getUTCSeconds();
 
     const date = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
     const time = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -34,23 +34,27 @@ async function createTask(email, taskName, deadline, description, status){
     }
 }
 
-async function editTask(email, taskName, Olddeadline, Newdeadline , description, status){
+async function editTask(email, taskName, Oldtaskname, Olddeadline, Newdeadline , description, status){
     openConnection();
     const receivedDeadline = new Date(Olddeadline);
-    const year = receivedDeadline.getFullYear();
-    const month = receivedDeadline.getMonth() + 1;
-    const day = receivedDeadline.getDate();
-    const hours = receivedDeadline.getHours();
-    const minutes = receivedDeadline.getMinutes();
-    const seconds = receivedDeadline.getSeconds();
+    const year = receivedDeadline.getUTCFullYear();
+    const month = receivedDeadline.getUTCMonth() + 1;
+    const day = receivedDeadline.getUTCDate();
+    const hours = receivedDeadline.getUTCHours();
+    const minutes = receivedDeadline.getUTCMinutes();
+    const seconds = receivedDeadline.getUTCSeconds();
 
     const olddate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
     const oldtime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-
+    console.log(`dead ${Olddeadline}`)
+    console.log(`name ${taskName}`)
+    console.log(`date ${olddate}`)
+    console.log(`time ${oldtime}`)
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": olddate, "time": oldtime}});
+    const result =  await tasksDB.updateOne(filter, {$pull: {"tasks":{"taskname": Oldtaskname, "date": olddate, "time": oldtime}}});
+    console.log(result)
     const updateResult = await createTask(email, taskName, Newdeadline, description, status);
     if(result && updateResult){
         ;
@@ -62,22 +66,16 @@ async function editTask(email, taskName, Olddeadline, Newdeadline , description,
     }
 }
 
-async function deleteTask(email, taskName, deadline){
+async function deleteTask(email, taskName, date, time){
     openConnection();
-    const receivedDeadline = new Date(deadline);
-    const year = receivedDeadline.getFullYear();
-    const month = receivedDeadline.getMonth() + 1;
-    const day = receivedDeadline.getDate();
-    const hours = receivedDeadline.getHours();
-    const minutes = receivedDeadline.getMinutes();
-    const seconds = receivedDeadline.getSeconds();
 
-    const date = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
-    const time = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
+    console.log(`name ${taskName}`)
+    console.log(`time ${time}`)
+    console.log(`date ${date}`)
     const filter = { "emailId": email };
     const tasksDB = database.collection("tasks");
-    const result =  await tasksDB.updateOne(filter, {$pull: {"taskname": taskName, "date": date, "time": time}});
+    const result =  await tasksDB.updateOne(filter, {$pull: {"tasks":{"taskname": taskName, "date": date, "time": time}}});
+    console.log(result)
     if(result){
         CloseConnection();
         return true;
@@ -88,7 +86,7 @@ async function deleteTask(email, taskName, deadline){
     }
 }
 
-async function getTask(email, taskName) {
+async function getTask(email, taskName, deadline) {
     openConnection();
     const filter = {"emailId": email, "taskname": taskName};
     const tasksDB = database.collection("tasks");

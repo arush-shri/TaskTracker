@@ -11,18 +11,19 @@ taskRoute.post('/createTask', async (req, res)=>{
     else{
         res.status(500).send("Failed to create task");
     }
-})                                                      //PRIORITY BHI ADD KRNA HAI
-taskRoute.post('/updateTask', async (req, res)=>{
-    const result = await editTask(req.body.email, req.body.taskname, req.body.Olddeadline, req.body.Newdeadline, req.body.description, req.body.status)
+}) 
+                                                     //PRIORITY BHI ADD KRNA HAI
+taskRoute.post('/updateTask/:email', async (req, res)=>{
+    console.log(req.body)
+    const result = await editTask(req.params.email, req.body.taskname, req.body.Oldtaskname, req.body.Olddeadline, req.body.Newdeadline, req.body.description, req.body.status)
     if(result){
         res.status(200).send("Task update successfully");
     }
-    else{
-        res.status(500).send("Failed to update task");
-    }
 })
-taskRoute.delete('/deleteTask', (req, res)=>{
-    const result = deleteTask(req.body.email, req.body.taskname)
+
+taskRoute.post('/deleteTask/:email', (req, res)=>{
+
+    const result = deleteTask(req.params.email, req.body.taskname, req.body.date, req.body.time)
     if(result){
         res.status(200).send("Task delete successfully");
     }
@@ -31,9 +32,9 @@ taskRoute.delete('/deleteTask', (req, res)=>{
     }
 })
 
-taskRoute.get('/getTask', async (req, res) => {
+taskRoute.get('/getTask/:email', async (req, res) => {
     try {
-        const result = await getTask(req.query.email, req.query.taskname);
+        const result = await getTask(req.params.email, req.query.taskname);
 
         if (result) {
             res.status(200).send("Task found successfully");

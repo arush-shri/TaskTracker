@@ -49,16 +49,15 @@ const TodoList = () => {
 
     const fetchDataInterval = setInterval(() => {
       fetchTasks();
-    }, 1000000);
+    }, 1000);
     return () => clearInterval(fetchDataInterval);
   }, [email]);
 
 
-  const deleteTask = (index) => {
-    let tempList = [...taskList];
-    tempList.splice(index, 1);
-    updateTaskList(tempList);
+  const deleteTask = async (task) => {
+    await axios.post(`http://localhost:4000/task/deleteTask/${email}`, taskList[task])
   };
+  
 
   const updateTaskList = (newList) => {
     localStorage.setItem('taskList', JSON.stringify(newList));
@@ -85,21 +84,17 @@ const TodoList = () => {
     toggleEditModal();
   };
 
-  const updateTask = (updatedTask) => {
-    const updatedList = taskList.map((task) =>
-      task === selectedTask ? { ...task, ...updatedTask } : task
-    );
-
-    updateTaskList(updatedList);
-    setEditModal(false);
-  };
-
   const greetUser = () => {
     const today = new Date().toDateString();
     const incompleteTasks = Array.isArray(taskList)? taskList.filter((task) => {
       const taskDate = new Date(task.date).toDateString();
       return task.status === 'Incomplete' && taskDate === today;
     }) : [];
+
+    const deleteTaskToday = async (task) => {
+      console.log(incompleteTasks[task])
+      await axios.post(`http://localhost:4000/task/deleteTask/${email}`, incompleteTasks[task])
+    };
     
     // const logout = ()=>{
     //   localStorage.removeItem('token')
@@ -118,7 +113,7 @@ const TodoList = () => {
                 key={index}
                 taskObj={task}
                 index={index}
-                deleteTask={deleteTask}
+                deleteTask={deleteTaskToday}
                 updateTaskList={updateTaskList}
                 editTask={editTask}
               />
@@ -211,7 +206,6 @@ const TodoList = () => {
         <EditTaskPopup
           modal={editModal}
           toggle={toggleEditModal}
-          updateTask={updateTask}
           taskObj={selectedTask}
         />
       )}

@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import DatePicker from 'react-datepicker';
+import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import { parseISO, sub, add } from 'date-fns';
+import { jwtDecode } from 'jwt-decode';
 
-const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
+const EditTaskPopup = ({ modal, toggle, taskObj }) => {
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
-  const [deadline, setDeadline] = useState(new Date());
+  const [deadline, setDeadline] = useState(null);
   const [status, setStatus] = useState('');
+  const [Olddeadline, setOld] = useState('');
+  const [oldName, setname] = useState('');
+  const [mailid, setMail] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    console.log(value)
     if (name === 'taskName') {
       setTaskName(value);
     } else if (name === 'description') {
@@ -22,22 +29,39 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
   };
 
   useEffect(() => {
-    setTaskName(taskObj.Name);
-    setDescription(taskObj.Description);
-    setDeadline(new Date(taskObj.Deadline));
-    setStatus(taskObj.Status);
-  }, [taskObj]);
+    setTaskName(taskObj.taskname);
+    setDescription(taskObj.description);
+    setDeadline(sub(parseISO(`${taskObj.date}T${taskObj.time}Z`), { hours: 5, minutes: 30 }));
+    setOld((new Date(`${taskObj.date}T${taskObj.time}Z`)).toISOString());
+    console.log(mailid)
+    setStatus(taskObj.status);
+    setname(taskObj.taskname);
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setMail(decodedToken.userId);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []);
+
+  const handleUpdate = async () => {
+    console.log(deadline)
+    console.log();
     let tempObj = {
-      Name: taskName,
-      Description: description,
-      Deadline: deadline,
-      Status: status,
+      taskname: taskName,
+      Oldtaskname: oldName,
+      description: description,
+      Olddeadline: Olddeadline,
+      Newdeadline: add(deadline, { hours: 5, minutes: 30 }),
+      status: status,
     };
     console.log('Updated task:', tempObj);
-    updateTask(tempObj);
+    toggle();
+    await axios.post(`http://localhost:4000/task/updateTask/${mailid}`, tempObj);
   };
 
   return (
@@ -89,7 +113,7 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
         </div>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={handleUpdate}>
+        <Button color="primary" onClick={()=>handleUpdate()}>
           Update
         </Button>{' '}
         <Button color="secondary" onClick={toggle}>
@@ -100,4 +124,4 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
   );
 };
 
-export default EditTaskPopup;////
+export default EditTaskPopup;
