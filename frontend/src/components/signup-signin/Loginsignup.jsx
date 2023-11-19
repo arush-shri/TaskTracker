@@ -62,7 +62,7 @@ const Loginsignup = () => {
                 }, 1800);
             }
             else {
-              localStorage.setItem('token', response);
+              localStorage.setItem('token', response.data.token);
               return navigate("/Todo");
             }
           } catch (error) {

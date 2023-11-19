@@ -4,20 +4,20 @@ import CreateTask from '../modals/CreateTask';
 import Card from './Card';
 import './Todolist.css';
 import EditTaskPopup from '../modals/EditTask';
-import { useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+// import { useNavigate } from "react-router-dom";
 
 const TodoList = () => {
-  const navigate = useNavigate();
+
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [taskList, setTaskList] = useState([]);
   const [showAllTasks, setShowAllTasks] = useState(false);
   const [showUpcomingTasks, setShowUpcomingTasks] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-
+  // const navigate = useNavigate();
   useEffect(() => {
     let arr = localStorage.getItem('taskList');
-
     if (arr) {
       let obj = JSON.parse(arr);
       setTaskList(obj);
@@ -64,17 +64,29 @@ const TodoList = () => {
     setEditModal(false);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []);
+
   const greetUser = () => {
     const today = new Date().toDateString();
     const incompleteTasks = taskList.filter(
       (task) =>
         task.Status === 'Incomplete' && new Date(task.Deadline).toDateString() === today
     );
-
-    const logout = ()=>{
-      localStorage.removeItem('token')
-      return navigate('/Loginsignup')
-    }
+    
+    // const logout = ()=>{
+    //   localStorage.removeItem('token')
+    //   return navigate('/Loginsignup')
+    // }
 
     if (incompleteTasks.length > 0) {
       return (
