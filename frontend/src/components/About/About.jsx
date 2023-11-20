@@ -36,7 +36,7 @@ const About = () => {
         <div class="text-center card-box rounded-2 p-5 shadow">
           <img src="images/social3.jpeg" alt="link" class="img-fluid"></img>
           <h5 class="my-3 fw-normal">Tailored Solutions</h5>
-          <p class="mb-5">Anjali Technicals provides personalized solutions designed to meet your unique needs, ensuring a perfect fit for your business objectives and will elevate your business.</p>
+          <p class="mb-5"> provides personalized solutions designed to meet your unique needs, ensuring a perfect fit for your business objectives and will elevate your business.</p>
           
         </div>
       </div>
