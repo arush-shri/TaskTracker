@@ -7,7 +7,6 @@ router.get('/getUserDetails/:email', async (req, res) => {
 
     try {
         const userDetails = await getMe(email);
-
         if (userDetails === "User not found" || userDetails === "Error fetching user details") {
             res.status(404).json({ error: userDetails });
         } else {
@@ -19,4 +18,4 @@ router.get('/getUserDetails/:email', async (req, res) => {
     }
 });
 
-module.exports = userRoute;
+module.exports = router;

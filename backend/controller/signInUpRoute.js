@@ -18,7 +18,7 @@ signRoute.post("/login", async (req, res) => {
 })
 
 signRoute.post("/signup", async (req, res) => {
-    const result = await initiateSignup(req.body.email, req.body.password, req.body.name, req.body.phoneNum, req.body.age)
+    const result = await initiateSignup(req.body.email, req.body.password, req.body.uname, req.body.phoneNum, req.body.age)
     if(result === true){
         const { createHash } = require('crypto');
         const secret = createHash('sha256').update(req.body.email).digest('hex');

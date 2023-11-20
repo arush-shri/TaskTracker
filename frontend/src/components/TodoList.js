@@ -6,7 +6,6 @@ import './Todolist.css';
 import EditTaskPopup from '../modals/EditTask';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-// import { useNavigate } from "react-router-dom";
 
 const TodoList = () => {
 
@@ -17,7 +16,6 @@ const TodoList = () => {
   const [showUpcomingTasks, setShowUpcomingTasks] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [email, setMail] = useState('');
-  // const navigate = useNavigate();
 
   useEffect(() => {
     
@@ -92,14 +90,9 @@ const TodoList = () => {
     }) : [];
 
     const deleteTaskToday = async (task) => {
-      console.log(incompleteTasks[task])
       await axios.post(`http://localhost:4000/task/deleteTask/${email}`, incompleteTasks[task])
     };
     
-    // const logout = ()=>{
-    //   localStorage.removeItem('token')
-    //   return navigate('/Loginsignup')
-    // }
 
     if (incompleteTasks.length > 0) {
       return (

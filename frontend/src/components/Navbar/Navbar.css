@@ -46,7 +46,7 @@ a {
 }
 
 .nav-link {
-    color: var(--bs-main-color);
+    color: var(--bs-dar-primary);
 }
 
 .nav-link:hover {

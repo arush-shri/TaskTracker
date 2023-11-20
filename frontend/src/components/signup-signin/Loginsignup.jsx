@@ -5,7 +5,6 @@ import { faUser, faEnvelope, faLock, faCalendarAlt, faPhone } from '@fortawesome
 import './Loginsignup.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import UserProfile from './UserProfile';
 
 const Loginsignup = () => {
   const [action, setAction] = useState('Sign up');
@@ -20,7 +19,6 @@ const Loginsignup = () => {
     phoneNum: '',
   });
 
-  const [userProfileData, setUserProfileData] = useState(null);
 
   const handleChange = (e) => {
     setUserData({
@@ -38,9 +36,8 @@ const Loginsignup = () => {
           setErrorMessage(null);
         }, 1800);
       } else {
-        // Save user profile data and update state
-        setUserProfileData(response.data);
         localStorage.setItem('token', response.data.token);
+        return navigate("/Todo");
       }
     } catch (error) {
       console.log(error);
@@ -61,19 +58,13 @@ const Loginsignup = () => {
           setErrorMessage(null);
         }, 1800);
       } else {
-        // Save user profile data and update state
-        setUserProfileData(response.data);
         localStorage.setItem('token', response.data.token);
+        return navigate("/Todo");
       }
     } catch (error) {
       console.log(error);
     }
   };
-
-  // Redirect to UserProfile if userProfileData exists
-  if (userProfileData) {
-    return <UserProfile userData={userProfileData} />;
-  }
 
   return (
     <div>

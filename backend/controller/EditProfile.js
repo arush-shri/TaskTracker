@@ -1,10 +1,9 @@
-import DBConnection from'./DBConnector'
-import { CloseConnection } from './DBConnector';
-import { hasher } from './SignInUp'
+const { database, CloseConnection, openConnection } = require('./DBConnector');
 
 async function changePassword(email, password){
+    openConnection();
     const passwd = hasher(password);
-    const usersCollection = DBConnection.collection("users");
+    const usersCollection = database.collection("users");
     const filter = { "emailId": email };
     const updateQuery = {
         $set: {
@@ -22,7 +21,8 @@ async function changePassword(email, password){
 }
 
 async function changePhoneNumber(email, phoneNumber){
-    const usersCollection = DBConnection.collection("users");
+    openConnection();
+    const usersCollection = database.collection("users");
     const filter = { "emailId": email };
     const updateQuery = {
         $set: {
@@ -40,7 +40,8 @@ async function changePhoneNumber(email, phoneNumber){
 }
 
 async function getMe(email) {
-    const usersCollection = DBConnection.collection("users");
+    openConnection();
+    const usersCollection = database.collection("users");
     const filter = { "emailId": email };
 
     try {

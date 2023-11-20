@@ -18,7 +18,6 @@ const EditTaskPopup = ({ modal, toggle, taskObj }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    console.log(value)
     if (name === 'taskName') {
       setTaskName(value);
     } else if (name === 'description') {
@@ -33,7 +32,6 @@ const EditTaskPopup = ({ modal, toggle, taskObj }) => {
     setDescription(taskObj.description);
     setDeadline(sub(parseISO(`${taskObj.date}T${taskObj.time}Z`), { hours: 5, minutes: 30 }));
     setOld((new Date(`${taskObj.date}T${taskObj.time}Z`)).toISOString());
-    console.log(mailid)
     setStatus(taskObj.status);
     setname(taskObj.taskname);
 
@@ -49,8 +47,6 @@ const EditTaskPopup = ({ modal, toggle, taskObj }) => {
   }, []);
 
   const handleUpdate = async () => {
-    console.log(deadline)
-    console.log();
     let tempObj = {
       taskname: taskName,
       Oldtaskname: oldName,
@@ -59,7 +55,6 @@ const EditTaskPopup = ({ modal, toggle, taskObj }) => {
       Newdeadline: add(deadline, { hours: 5, minutes: 30 }),
       status: status,
     };
-    console.log('Updated task:', tempObj);
     toggle();
     await axios.post(`http://localhost:4000/task/updateTask/${mailid}`, tempObj);
   };

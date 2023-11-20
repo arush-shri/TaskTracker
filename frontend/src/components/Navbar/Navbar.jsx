@@ -6,14 +6,23 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
+  const checkToken = () => {
+    
     const token = localStorage.getItem('token');
-    if (token) {
+    console.log(isAuthenticated)
+    if (token !== null) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
     }
+  };
+
+  useEffect(() => {
+    checkToken();
+    const intervalId = setInterval(() => {
+      checkToken();
+    }, 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
