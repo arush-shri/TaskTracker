@@ -39,7 +39,7 @@ const UserProfile = () => {
       return navigate('/Loginsignup')
   }
   return (
-    <div className="container pt-5">
+    <div className="container usercontainer pt-5">
 
       <h2>Welcome, {userData.username}!</h2>
       <p>Email: {email}</p>
