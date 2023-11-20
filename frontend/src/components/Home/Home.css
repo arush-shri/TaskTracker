@@ -67,19 +67,14 @@ button,a{
     margin-bottom: 5rem;
 }
 
-
-
-
-
-
-
 /*hero--section---stylng*/
 .hero-section .container{
 
-    padding:7rem;
+    padding:2rem;
     display:grid;
     place-content: center;
     height: inherit;
+    background-color: var(--bs-dar-primary);
     
 }
 

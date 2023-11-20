@@ -1,8 +1,9 @@
 import React from 'react';
 import './Home.css';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  
+  const navigate = useNavigate();
     return (
         <div>
             <section class="bg-main bg-color hero-section">
@@ -15,7 +16,8 @@ const Home = () => {
                             "Task Tracker is your go-to web app for managing your daily tasks and boosting your productivity. Designed with simplicity and efficiency in mind, Task Tracker empowers you to organize your tasks, set priorities, and achieve your goals with ease."
                             </p>
                             <div class="text-center w-100 text-md-start">
-                                <button class="text-uppercase btn btn-primary px-5 py-3" data-bs-toggle="tooltip" title="Make Todo-List">Todo</button>
+                                <button class="text-uppercase btn btn-primary px-5 py-3" 
+                                data-bs-toggle="tooltip" title="Make Todo-List" onClick={()=>navigate('/Todo')}>Todo</button>
                             </div>
                         </div>
 
