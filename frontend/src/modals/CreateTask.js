@@ -48,7 +48,7 @@ const CreateTaskPopup = ({ modal, toggle }) => {
     taskObj['description'] = description;
     taskObj['deadline'] = (new Date(new Date(deadline).getTime() + (5 * 60 + 30) * 60 * 1000));
     taskObj['status'] = status;
-    await axios.post('http://localhost:4000/task/createTask', taskObj);
+    await axios.post('https://task-tracker-deploy.onrender.com/task/createTask', taskObj);
     toggle();
   };
 

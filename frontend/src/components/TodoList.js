@@ -33,7 +33,7 @@ const TodoList = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/task/getAllTasks/${email}`);
+        const response = await axios.get(`https://task-tracker-deploy.onrender.com/task/getAllTasks/${email}`);
         const tasks = response.data.tasks;
         if (tasks.length > 0) {
           setTaskList(tasks);
@@ -53,7 +53,7 @@ const TodoList = () => {
 
 
   const deleteTask = async (task) => {
-    await axios.post(`http://localhost:4000/task/deleteTask/${email}`, taskList[task])
+    await axios.post(`https://task-tracker-deploy.onrender.com/task/deleteTask/${email}`, taskList[task])
   };
   
 
@@ -90,7 +90,7 @@ const TodoList = () => {
     }) : [];
 
     const deleteTaskToday = async (task) => {
-      await axios.post(`http://localhost:4000/task/deleteTask/${email}`, incompleteTasks[task])
+      await axios.post(`https://task-tracker-deploy.onrender.com/task/deleteTask/${email}`, incompleteTasks[task])
     };
     
 

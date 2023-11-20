@@ -29,7 +29,7 @@ const Loginsignup = () => {
 
   const handleSignup = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/signinup/signup', userData);
+      const response = await axios.post('https://task-tracker-deploy.onrender.com/signinup/signup', userData);
       if (typeof response.data === 'string') {
         setErrorMessage('User already exists. Please choose a different email.');
         setTimeout(() => {
@@ -46,7 +46,7 @@ const Loginsignup = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/signinup/login', userData);
+      const response = await axios.post('https://task-tracker-deploy.onrender.com/signinup/login', userData);
       if (typeof response.data === 'string') {
         setErrorMessage('User does not exist.');
         setTimeout(() => {

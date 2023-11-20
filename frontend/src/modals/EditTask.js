@@ -56,7 +56,7 @@ const EditTaskPopup = ({ modal, toggle, taskObj }) => {
       status: status,
     };
     toggle();
-    await axios.post(`http://localhost:4000/task/updateTask/${mailid}`, tempObj);
+    await axios.post(`https://task-tracker-deploy.onrender.com/task/updateTask/${mailid}`, tempObj);
   };
 
   return (

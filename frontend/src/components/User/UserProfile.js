@@ -12,7 +12,7 @@ const UserProfile = () => {
   const [userData, setUser] = useState([]);
   async function getUser(mailId){
       
-    const result = await axios.get(`http://localhost:4000/user/getUserDetails/${mailId}`)
+    const result = await axios.get(`https://task-tracker-deploy.onrender.com/user/getUserDetails/${mailId}`)
     if(result.status===200){
       setUser(result.data)
       console.log(result.data)
